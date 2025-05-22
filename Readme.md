@@ -1,8 +1,8 @@
 Tasks
-[] Explicar que es Fudo(2-3 parrafos, 100 palabras max)
-[] Explicar que es TCP(2-3 parrafos, 50 palabras max)
-[] Explicar que es HTTP(2-3 parrafos, 50 palabras max)
-[] Rack API (ruby sin rails)
+-[] Explicar que es Fudo(2-3 parrafos, 100 palabras max)
+-[] Explicar que es TCP(2-3 parrafos, 50 palabras max)
+-[] Explicar que es HTTP(2-3 parrafos, 50 palabras max)
+-[] Rack API (ruby sin rails)
 
 - [] El proyecto debe estar hosteado en GitHub/GitLab o cualquier repo git, incluyendo los
   archivos .md de los 3 primeros puntos.
