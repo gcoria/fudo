@@ -1,0 +1,1 @@
+Fudo es una solucion integral para comercios gastronomicos como bares, cafés y restaurantes. Permite gestionar pedidos, delivery, facturación e impresiones de comandas desde cualquier dispositivo con conexión a Internet. Es compatible con impresoras fiscales y cuenta con soporte técnico dedicado
