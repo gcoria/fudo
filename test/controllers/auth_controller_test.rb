@@ -78,4 +78,4 @@ class AuthControllerTest < Minitest::Test
     assert_equal false, AuthController.valid_token?("invalid_token"), "Invalid token should not be valid"
     assert_nil AuthController.username_for("invalid_token"), "Invalid token should not have a username"
   end
-end 
+end

@@ -7,6 +7,7 @@ class ApiAuthenticationTest < Minitest::Test
 
   def setup
     AuthController.class_variable_set(:@@tokens, {})
+    ProductController.class_variable_set(:@@products, [])
   end
 
   def app
@@ -28,9 +29,17 @@ class ApiAuthenticationTest < Minitest::Test
     post '/products', 
          { name: 'Test Product', price: 99.99 }.to_json, 
          { 'CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => "Bearer #{token}" }
-    assert_equal 201, last_response.status
+    assert_equal 202, last_response.status, "Should return 202 Accepted for async creation"
     response_body = JSON.parse(last_response.body)
-    assert_equal 'created', response_body['status']
+    assert_equal 'processing', response_body['status']
+    assert response_body['job_id'], "Response should contain a job ID"
+    
+    sleep 3
+    get '/products', nil, { 'HTTP_AUTHORIZATION' => "Bearer #{token}" }
+    assert_equal 200, last_response.status
+    response_body = JSON.parse(last_response.body)
+    assert_equal 1, response_body['products'].length
+    assert_equal 'Test Product', response_body['products'][0]['name']
   end
 
   def test_unauthorized_access
@@ -51,4 +60,4 @@ class ApiAuthenticationTest < Minitest::Test
     response_body = JSON.parse(last_response.body)
     assert_equal 'Invalid credentials', response_body['error']
   end
-end 
+end
