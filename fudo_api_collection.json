@@ -145,6 +145,140 @@
       "description": "JSON API endpoints"
     },
     {
+      "name": "Compression Tests",
+      "item": [
+        {
+          "name": "List Products with Gzip",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Encoding",
+                "value": "gzip",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:9292/products",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9292",
+              "path": ["products"]
+            },
+            "description": "Get a list of products with gzip compression"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Response is compressed with gzip\", function() {",
+                  "    pm.response.to.have.header(\"Content-Encoding\", \"gzip\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Create Product with Gzip",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Encoding",
+                "value": "gzip",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Compressed Product\",\n    \"price\": 199.99,\n    \"description\": \"Product with gzip compression\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9292/products",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9292",
+              "path": ["products"]
+            },
+            "description": "Create a product with gzip compression in the response"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Response is compressed with gzip\", function() {",
+                  "    pm.response.to.have.header(\"Content-Encoding\", \"gzip\");",
+                  "});",
+                  "",
+                  "pm.test(\"Response has 202 status\", function() {",
+                  "    pm.response.to.have.status(202);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Get Same Data Without Gzip",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:9292/products",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9292",
+              "path": ["products"]
+            },
+            "description": "Get products without compression for comparison"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Response is not compressed\", function() {",
+                  "    pm.response.to.not.have.header(\"Content-Encoding\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ],
+      "description": "Endpoints for testing gzip compression"
+    },
+    {
       "name": "Error Tests",
       "item": [
         {
