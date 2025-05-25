@@ -62,6 +62,14 @@ See [Exercise.md](Exercise.md) for app requirements.
 
 4. The API will be available at `http://localhost:9292`
 
+## Running Tests
+
+Run all tests with:
+
+```
+bundle exec rake test
+```
+
 ## Test API
 
 #### OpenAPI
