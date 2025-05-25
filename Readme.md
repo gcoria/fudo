@@ -1,5 +1,24 @@
 # Fudo API
 
+## Features
+
+- Token-based authentication system
+- Asynchronous product creation with background job processing
+- Product listing with authenticated access
+- OpenAPI specification for API documentation and client generation
+- Compressed responses (gzip) support
+- Static file serving with cache control
+
+## Tech Stack
+
+- Ruby 3.2
+- Rack
+- In-memory data storage
+- Background job processing
+- JWT for token authentication
+- Docker
+- OpenAPI 3.0 specification
+
 ## Exercise
 
 See [Exercise.md](Exercise.md) for app requirements.
@@ -42,6 +61,14 @@ See [Exercise.md](Exercise.md) for app requirements.
    ```
 
 4. The API will be available at `http://localhost:9292`
+
+## Running Tests
+
+Run all tests with:
+
+```
+bundle exec rake test
+```
 
 ## Test API
 
