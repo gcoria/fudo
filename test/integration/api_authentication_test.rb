@@ -22,7 +22,7 @@ class ApiAuthenticationTest < Minitest::Test
     token = response_body['token']
 
     get '/products', nil, { 'HTTP_AUTHORIZATION' => "Bearer #{token}" }
-    assert_equal 200, last_response.status
+    assert_equal 205, last_response.status
     response_body = JSON.parse(last_response.body)
     assert_equal [], response_body['products']
 
