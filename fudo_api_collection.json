@@ -1,0 +1,175 @@
+{
+  "info": {
+    "name": "Fudo API",
+    "description": "Fudo API collection for testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Static Files",
+      "item": [
+        {
+          "name": "Hello World (Root)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9292/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9292",
+              "path": [""]
+            },
+            "description": "Get the Hello World response from the root endpoint"
+          },
+          "response": []
+        },
+        {
+          "name": "AUTHORS file",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9292/authors",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9292",
+              "path": ["authors"]
+            },
+            "description": "Get the AUTHORS file content with cache headers (max-age=86400)"
+          },
+          "response": []
+        },
+        {
+          "name": "OpenAPI Spec",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9292/openapi.yaml",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9292",
+              "path": ["openapi.yaml"]
+            },
+            "description": "Get the OpenAPI specification with no-store cache headers"
+          },
+          "response": []
+        }
+      ],
+      "description": "Static file endpoints served by StaticFileServer middleware"
+    },
+    {
+      "name": "API Endpoints",
+      "item": [
+        {
+          "name": "Authenticate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"test\",\n    \"password\": \"test123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9292/auth",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9292",
+              "path": ["auth"]
+            },
+            "description": "Authenticate a user"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test Product\",\n    \"price\": 99.99,\n    \"description\": \"A test product\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9292/products",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9292",
+              "path": ["products"]
+            },
+            "description": "Create a new product"
+          },
+          "response": []
+        },
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9292/products",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9292",
+              "path": ["products"]
+            },
+            "description": "Get a list of all products"
+          },
+          "response": []
+        }
+      ],
+      "description": "JSON API endpoints"
+    },
+    {
+      "name": "Error Tests",
+      "item": [
+        {
+          "name": "Non-existent route",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9292/not-found",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9292",
+              "path": ["not-found"]
+            },
+            "description": "Test 404 error response"
+          },
+          "response": []
+        },
+        {
+          "name": "Path Traversal Test",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:9292/../README.md",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9292",
+              "path": ["..", "README.md"]
+            },
+            "description": "Test protection against path traversal attacks"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test error handling and security"
+    }
+  ]
+} 
