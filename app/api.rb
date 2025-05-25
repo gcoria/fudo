@@ -1,18 +1,23 @@
 require 'json'
 require_relative './controllers/auth_controller'
+require_relative './controllers/product_controller'
 
 class API
+  def initialize
+    @auth_controller = AuthController.new
+    @product_controller = ProductController.new
+  end
+
   def call(env)
     req = Rack::Request.new(env)
 
     case [req.request_method, req.path_info]
     when ['POST', '/auth']
-      auth_controller = AuthController.new
-      auth_controller.call(req)
+      @auth_controller.call(req)
     when ['POST', '/products']
-      handle_create_product(req)
+      @product_controller.create(req)
     when ['GET', '/products']
-      handle_list_products(req)
+      @product_controller.index(req)
     else
       [404, { 'content-type' => 'application/json' }, [{ error: 'Not Found' }.to_json]]
     end
