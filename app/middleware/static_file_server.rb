@@ -8,15 +8,16 @@ class StaticFileServer
         '/authors' => 'public, max-age=86400',
         '/openapi.yaml' => 'no-store'
       }
+      @allowed_paths = @cache_rules.keys
     end
   
     def call(env)
       req = Rack::Request.new(env)
       path_info = req.path_info
   
-      case path_info
-      when '/authors', '/openapi.yaml'
-        file_path = File.join(@root, path_info.sub(/^\//, ''))
+      if @allowed_paths.include?(path_info)
+        file_name = path_info.sub(/^\//, '')
+        file_path = File.join(@root, file_name)
         secure_path = File.expand_path(file_path)
         
         root_path = File.expand_path(@root)

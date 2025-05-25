@@ -51,6 +51,11 @@ class StaticFileServerTest < Minitest::Test
     assert_equal 'Not Found', last_response.body
   end
 
+  def test_public_directory_not_directly_accessible
+    get '/public/authors'
+    assert_equal 404, last_response.status
+  end
+
   private
 
   def app
