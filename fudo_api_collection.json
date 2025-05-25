@@ -75,7 +75,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"test\",\n    \"password\": \"test123\"\n}"
+              "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"secret\"\n}"
             },
             "url": {
               "raw": "http://localhost:9292/auth",
@@ -84,7 +84,7 @@
               "port": "9292",
               "path": ["auth"]
             },
-            "description": "Authenticate a user"
+            "description": "Authenticate a user with credentials from AuthController"
           },
           "response": []
         },
@@ -96,6 +96,11 @@
               {
                 "key": "Content-Type",
                 "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
                 "type": "text"
               }
             ],
@@ -118,7 +123,13 @@
           "name": "List Products",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
             "url": {
               "raw": "http://localhost:9292/products",
               "protocol": "http",
@@ -136,6 +147,32 @@
     {
       "name": "Error Tests",
       "item": [
+        {
+          "name": "Invalid Authentication",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"wrong\",\n    \"password\": \"wrong\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9292/auth",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9292",
+              "path": ["auth"]
+            },
+            "description": "Test authentication with invalid credentials"
+          },
+          "response": []
+        },
         {
           "name": "Non-existent route",
           "request": {
@@ -170,6 +207,26 @@
         }
       ],
       "description": "Test error handling and security"
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (pm.response.code === 200 && pm.response.json().token) {",
+          "    pm.collectionVariables.set('auth_token', pm.response.json().token);",
+          "    console.log('Auth token saved: ' + pm.response.json().token);",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "auth_token",
+      "value": ""
     }
   ]
 } 

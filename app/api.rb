@@ -1,4 +1,5 @@
 require 'json'
+require_relative './controllers/auth_controller'
 
 class API
   def call(env)
@@ -6,7 +7,8 @@ class API
 
     case [req.request_method, req.path_info]
     when ['POST', '/auth']
-      handle_auth(req)
+      auth_controller = AuthController.new
+      auth_controller.call(req)
     when ['POST', '/products']
       handle_create_product(req)
     when ['GET', '/products']
@@ -18,15 +20,25 @@ class API
 
   private
 
-  def handle_auth(req)
-    [200, { 'content-type' => 'application/json' }, [{ status: 'ok' }.to_json]]
-  end
-
   def handle_create_product(req)
-    [201, { 'content-type' => 'application/json' }, [{ status: 'created' }.to_json]]
+    auth_header = req.get_header('HTTP_AUTHORIZATION')
+    token = auth_header&.gsub('Bearer ', '')
+    
+    if AuthController.valid_token?(token)
+      [201, { 'content-type' => 'application/json' }, [{ status: 'created' }.to_json]]
+    else
+      [401, { 'content-type' => 'application/json' }, [{ error: 'Unauthorized' }.to_json]]
+    end
   end
 
   def handle_list_products(req)
-    [200, { 'content-type' => 'application/json' }, [{ products: [] }.to_json]]
+    auth_header = req.get_header('HTTP_AUTHORIZATION')
+    token = auth_header&.gsub('Bearer ', '')
+    
+    if AuthController.valid_token?(token)
+      [200, { 'content-type' => 'application/json' }, [{ products: [] }.to_json]]
+    else
+      [401, { 'content-type' => 'application/json' }, [{ error: 'Unauthorized' }.to_json]]
+    end
   end
 end
