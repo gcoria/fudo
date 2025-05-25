@@ -89,7 +89,7 @@
           "response": []
         },
         {
-          "name": "Create Product",
+          "name": "Create Product (Async)",
           "request": {
             "method": "POST",
             "header": [
@@ -115,7 +115,7 @@
               "port": "9292",
               "path": ["products"]
             },
-            "description": "Create a new product"
+            "description": "Create a new product asynchronously. Returns 202 Accepted with a job ID."
           },
           "response": []
         },
