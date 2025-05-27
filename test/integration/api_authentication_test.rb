@@ -21,6 +21,7 @@ class ApiAuthenticationTest < Minitest::Test
     assert response_body['token'], "Response should contain a token"
     token = response_body['token']
 
+    Product.reset
     get '/products', nil, { 'HTTP_AUTHORIZATION' => "Bearer #{token}" }
     assert_equal 200, last_response.status
     response_body = JSON.parse(last_response.body)

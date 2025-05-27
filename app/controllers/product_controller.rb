@@ -5,10 +5,11 @@ require_relative 'base_controller'
 require_relative '../models/product'
 
 class ProductController < BaseController
+  @@products = []
   @@job_queue = JobQueue.new
 
   def self.all_products
-    Product.all
+    @@products
   end
 
   def create(req)
