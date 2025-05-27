@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Fudo API
-  description: API for product management with authentication
+  description: Fudo API
   version: 1.0.0
 servers:
   - url: /

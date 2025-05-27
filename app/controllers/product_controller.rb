@@ -1,7 +1,10 @@
 require 'json'
+require 'securerandom'
 require_relative '../services/job_queue'
+require_relative 'base_controller'
+require_relative '../models/product'
 
-class ProductController
+class ProductController < BaseController
   @@products = []
   @@job_queue = JobQueue.new
 
@@ -10,53 +13,44 @@ class ProductController
   end
 
   def create(req)
-    auth_header = req.get_header('HTTP_AUTHORIZATION')
-    token = auth_header&.gsub('Bearer ', '')
+    token = authenticate(req)
+    return error_response(401, 'Unauthorized') unless token
     
-    unless AuthController.valid_token?(token)
-      return [401, {'content-type' => 'application/json'}, [{error: 'Unauthorized'}.to_json]]
-    end
-
-    begin
-      data = JSON.parse(req.body.read)
-    rescue JSON::ParserError
-      return [400, {'content-type' => 'application/json'}, [{error: 'Invalid JSON'}.to_json]]
-    end
-
+    data = parse_json(req)
+    return error_response(400, 'Invalid JSON') unless data
+    
+    return error_response(400, 'Name is required') unless data['name']
+    return error_response(400, 'Price is required') unless data['price']
+    
     job_id = SecureRandom.uuid
 
     @@job_queue.enqueue do
       username = AuthController.username_for(token)
-      product = {
-        id: SecureRandom.uuid,
+      
+      product = Product.new(
         name: data['name'],
         price: data['price'],
         description: data['description'],
-        created_by: username,
-        created_at: Time.now.iso8601
-      }
+        created_by: username
+      )
       
-      sleep 2
-      
-      @@products << product
+      sleep 2 
+
+      product.save
     end
 
-    [202, {'content-type' => 'application/json'}, [{
+    success_response(202, {
       status: 'processing',
       message: 'Product creation in progress',
       job_id: job_id
-    }.to_json]]
+    })
   end
 
   def index(req)
-    auth_header = req.get_header('HTTP_AUTHORIZATION')
-    token = auth_header&.gsub('Bearer ', '')
+    token = authenticate(req)
+    return error_response(401, 'Unauthorized') unless token
     
-    unless AuthController.valid_token?(token)
-      return [401, {'content-type' => 'application/json'}, [{error: 'Unauthorized'}.to_json]]
-    end
-
-    [200, {'content-type' => 'application/json'}, [{products: @@products}.to_json]]
+    success_response(200, {products: Product.all})
   end
 end
 

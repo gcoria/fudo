@@ -1,7 +1,7 @@
-require 'json'
 require 'securerandom'
+require_relative 'base_controller'
 
-class AuthController
+class AuthController < BaseController
   USERS = {
     'admin' => 'secret',
     'test_user' => 'test_password'
@@ -18,10 +18,10 @@ class AuthController
   end
 
   def call(req)
-    begin
-      data = JSON.parse(req.body.read)
-    rescue JSON::ParserError
-      return [400, {'content-type' => 'application/json'}, [{error: 'Invalid JSON'}.to_json]]
+    data = parse_json(req)
+    
+    unless data
+      return error_response(400, 'Invalid JSON')
     end
 
     username = data['username']
@@ -31,18 +31,9 @@ class AuthController
       token = SecureRandom.hex(16)
       @@tokens[token] = username
 
-      [200, {'content-type' => 'application/json'}, [{token: token}.to_json]]
+      success_response(200, {token: token})
     else
-      [401, {'content-type' => 'application/json'}, [{error: 'Invalid credentials'}.to_json]]
+      error_response(401, 'Invalid credentials')
     end
-  end
-
-  private
-
-  def respond_with(res, status, body)
-    res.status = status
-    res['Content-Type'] = 'application/json'
-    res.write(body.to_json)
-    res
   end
 end

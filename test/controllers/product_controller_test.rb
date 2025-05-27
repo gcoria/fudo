@@ -20,7 +20,7 @@ class ProductControllerTest < Minitest::Test
     _, _, body = @auth_controller.call(request)
     @token = JSON.parse(body.first)['token']
     
-    ProductController.class_variable_set(:@@products, [])
+    Product.reset
   end
 
   def test_create_product_returns_accepted_status
@@ -43,7 +43,7 @@ class ProductControllerTest < Minitest::Test
     
     sleep 3
     
-    products = ProductController.all_products
+    products = Product.all
     assert_equal 1, products.length
     assert_equal 'Test Product', products.first[:name]
     assert_equal 99.99, products.first[:price]
@@ -83,14 +83,12 @@ class ProductControllerTest < Minitest::Test
   end
 
   def test_list_products
-    ProductController.class_variable_set(:@@products, [
-      {
-        id: 'test-id',
-        name: 'Pre-existing Product',
-        price: 199.99,
-        created_by: 'admin'
-      }
-    ])
+    product = Product.new(
+      name: 'Pre-existing Product',
+      price: 199.99,
+      created_by: 'admin'
+    )
+    product.save
     
     env = Rack::MockRequest.env_for(
       '/products',
