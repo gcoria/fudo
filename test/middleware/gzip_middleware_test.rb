@@ -7,7 +7,7 @@ class GzipMiddlewareTest < Minitest::Test
   def setup
     # Create a simple app that returns JSON
     @app = lambda do |env|
-      [200, {'Content-Type' => 'application/json'}, ['{"message":"Hello, World!"}']]
+      [200, {'content-type' => 'application/json'}, ['{"message":"Hello, World!"}']]
     end
     
     @middleware = GzipMiddleware.new(@app)
@@ -22,8 +22,8 @@ class GzipMiddlewareTest < Minitest::Test
     
     # Verify the response is compressed
     assert_equal 200, status
-    assert_equal 'gzip', headers['Content-Encoding']
-    assert headers.key?('Content-Length'), "Response should have Content-Length header"
+    assert_equal 'gzip', headers['content-encoding']
+    assert headers.key?('content-length'), "Response should have content-length header"
     
     # Decompress and verify content
     io = StringIO.new(body.first)
@@ -43,14 +43,14 @@ class GzipMiddlewareTest < Minitest::Test
     
     # Verify the response is not compressed
     assert_equal 200, status
-    refute headers.key?('Content-Encoding')
+    refute headers.key?('content-encoding')
     assert_equal '{"message":"Hello, World!"}', body.first
   end
 
   def test_compresses_any_content_type
     # Create an app that returns HTML
     app = lambda do |env|
-      [200, {'Content-Type' => 'text/html'}, ['<html><body>Hello</body></html>']]
+      [200, {'content-type' => 'text/html'}, ['<html><body>Hello</body></html>']]
     end
     
     middleware = GzipMiddleware.new(app)
@@ -63,7 +63,7 @@ class GzipMiddlewareTest < Minitest::Test
     
     # Verify the response is compressed regardless of content type
     assert_equal 200, status
-    assert_equal 'gzip', headers['Content-Encoding']
+    assert_equal 'gzip', headers['content-encoding']
     
     # Decompress and verify content
     io = StringIO.new(body.first)
@@ -77,7 +77,7 @@ class GzipMiddlewareTest < Minitest::Test
   def test_handles_multiple_body_items
     # Create an app that returns multiple body items
     app = lambda do |env|
-      [200, {'Content-Type' => 'text/plain'}, ['Hello, ', 'World!']]
+      [200, {'content-type' => 'text/plain'}, ['Hello, ', 'World!']]
     end
     
     middleware = GzipMiddleware.new(app)
@@ -90,7 +90,7 @@ class GzipMiddlewareTest < Minitest::Test
     
     # Verify the response is compressed
     assert_equal 200, status
-    assert_equal 'gzip', headers['Content-Encoding']
+    assert_equal 'gzip', headers['content-encoding']
     
     # Decompress and verify content
     io = StringIO.new(body.first)
