@@ -14,8 +14,8 @@ class GzipMiddleware
     if request.env['HTTP_ACCEPT_ENCODING']&.include?('gzip')
       compressed = gzip(body.join)
 
-      headers['Content-Encoding'] = 'gzip'
-      headers['Content-Length'] = compressed.bytesize.to_s
+      headers['content-encoding'] = 'gzip'
+      headers['content-length'] = compressed.bytesize.to_s
 
       body = [compressed]
     end
