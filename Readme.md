@@ -15,7 +15,6 @@
 - Rack
 - In-memory data storage
 - Background job processing
-- JWT for token authentication
 - Docker
 - OpenAPI 3.0 specification
 
